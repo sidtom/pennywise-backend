@@ -1,10 +1,10 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
+require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
 
-const connectDB = require('./config/database');
-const expenseRoutes = require('./routes/expenses');
-const errorHandler = require('./middleware/errorHandler');
+const connectDB = require("./config/database");
+const expenseRoutes = require("./routes/expenses");
+const errorHandler = require("./middleware/errorHandler");
 
 const app = express();
 
@@ -16,16 +16,16 @@ app.use(express.json());
 connectDB();
 
 // Routes
-app.use('/expenses', expenseRoutes);
+app.use("/expenses", expenseRoutes);
 
 // Health check endpoint
-app.get('/health', (req, res) => {
-  res.json({ status: 'OK', timestamp: new Date().toISOString() });
+app.get("/health", (req, res) => {
+  res.json({ status: "OK", timestamp: new Date().toISOString() });
 });
 
 // 404 handler
 app.use((req, res) => {
-  res.status(404).json({ success: false, message: 'Route not found' });
+  res.status(404).json({ success: false, message: "Route not found" });
 });
 
 // Error handling middleware (must be last)

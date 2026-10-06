@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const TransactionSchema = new mongoose.Schema({
   category: {
@@ -39,6 +39,6 @@ const ExpenseSchema = new mongoose.Schema({
 // Index for efficient date queries
 ExpenseSchema.index({ date: 1 });
 
-const Expense = mongoose.model('Expense', ExpenseSchema);
+const Expense = mongoose.model("Expense", ExpenseSchema);
 
 module.exports = Expense;

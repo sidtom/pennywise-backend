@@ -1,5 +1,8 @@
-const Expense = require('../models/Expense');
-const { validateExpenseInput, validateUpdateInput } = require('../utils/validators');
+const Expense = require("../models/Expense");
+const {
+  validateExpenseInput,
+  validateUpdateInput,
+} = require("../utils/validators");
 
 /**
  * GET all expenses or filter by month/year
@@ -39,7 +42,7 @@ const createExpense = async (req, res, next) => {
     // Validate input
     const validation = validateExpenseInput(req.body);
     if (!validation.isValid) {
-      const err = new Error(validation.errors.join('; '));
+      const err = new Error(validation.errors.join("; "));
       err.statusCode = 400;
       return next(err);
     }
@@ -56,7 +59,7 @@ const createExpense = async (req, res, next) => {
 
       return res.status(200).json({
         success: true,
-        message: 'Expense updated by merging transactions',
+        message: "Expense updated by merging transactions",
         data: existingExpense,
       });
     }
@@ -72,7 +75,7 @@ const createExpense = async (req, res, next) => {
 
     res.status(201).json({
       success: true,
-      message: 'Expense created successfully',
+      message: "Expense created successfully",
       data: newExpense,
     });
   } catch (error) {
@@ -90,7 +93,7 @@ const updateExpense = async (req, res, next) => {
     // Validate update input
     const validation = validateUpdateInput(req.body);
     if (!validation.isValid) {
-      const err = new Error(validation.errors.join('; '));
+      const err = new Error(validation.errors.join("; "));
       err.statusCode = 400;
       return next(err);
     }
@@ -102,14 +105,14 @@ const updateExpense = async (req, res, next) => {
     });
 
     if (!updated) {
-      const err = new Error('Expense not found');
+      const err = new Error("Expense not found");
       err.statusCode = 404;
       return next(err);
     }
 
     res.json({
       success: true,
-      message: 'Expense updated successfully',
+      message: "Expense updated successfully",
       data: updated,
     });
   } catch (error) {
@@ -130,38 +133,40 @@ const deleteExpense = async (req, res, next) => {
     if (deletedExpense) {
       return res.json({
         success: true,
-        message: 'Expense deleted successfully',
+        message: "Expense deleted successfully",
       });
     }
 
     // If not found as expense, try to delete as a transaction
     const expenseWithTransaction = await Expense.findOne({
-      'transactions._id': id,
+      "transactions._id": id,
     });
 
     if (!expenseWithTransaction) {
-      const err = new Error('Expense or transaction not found');
+      const err = new Error("Expense or transaction not found");
       err.statusCode = 404;
       return next(err);
     }
 
     // Remove transaction
-    expenseWithTransaction.transactions = expenseWithTransaction.transactions.filter(
-      (transaction) => transaction._id.toString() !== id
-    );
+    expenseWithTransaction.transactions =
+      expenseWithTransaction.transactions.filter(
+        (transaction) => transaction._id.toString() !== id,
+      );
 
     // Recalculate total amount
-    expenseWithTransaction.totalAmount = expenseWithTransaction.transactions.reduce(
-      (sum, transaction) => sum + transaction.amount,
-      0
-    );
+    expenseWithTransaction.totalAmount =
+      expenseWithTransaction.transactions.reduce(
+        (sum, transaction) => sum + transaction.amount,
+        0,
+      );
 
     expenseWithTransaction.updatedAt = new Date();
     await expenseWithTransaction.save();
 
     res.json({
       success: true,
-      message: 'Transaction deleted successfully',
+      message: "Transaction deleted successfully",
       data: expenseWithTransaction,
     });
   } catch (error) {
